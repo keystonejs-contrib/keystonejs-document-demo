@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 
 import { jsx, useTheme } from '@keystone-ui/core';
 import { InfoIcon } from '@keystone-ui/icons/icons/InfoIcon';
@@ -7,7 +6,11 @@ import { AlertOctagonIcon } from '@keystone-ui/icons/icons/AlertOctagonIcon';
 import { CheckCircleIcon } from '@keystone-ui/icons/icons/CheckCircleIcon';
 import { Trash2Icon } from '@keystone-ui/icons/icons/Trash2Icon';
 import { Tooltip } from '@keystone-ui/tooltip';
+
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
+
 import { component, fields, NotEditable } from '@keystone-next/fields-document/component-blocks';
+
 import {
   ToolbarButton,
   ToolbarGroup,
@@ -23,80 +26,18 @@ const noticeIconMap = {
 
 export const componentBlocks = {
   timeline: component({
-    component: props => {
+    component: ({handle}) => {
       return (
-        <div
-          css={{
-            backgroundColor: 'white',
-            backgroundImage: `url(${props.imageSrc.value})`,
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            display: 'flex',
-            flexDirection: 'column',
-            fontSize: 28,
-            justifyContent: 'space-between',
-            minHeight: 200,
-            padding: 16,
-            width: '100%',
-          }}
-        >
-          <div
-            css={{
-              color: 'white',
-              fontWeight: 'bold',
-              fontSize: 48,
-              textAlign: 'center',
-              margin: 16,
-              textShadow: '0px 1px 3px black',
-            }}
-          >
-            {props.title}
-          </div>
-          <div
-            css={{
-              color: 'white',
-              fontSize: 24,
-              fontWeight: 'bold',
-              margin: 16,
-              textAlign: 'center',
-              textShadow: '0px 1px 3px black',
-            }}
-          >
-            {props.content}
-          </div>
-          {props.cta.discriminant ? (
-            <div
-              css={{
-                backgroundColor: '#F9BF12',
-                borderRadius: 6,
-                color: '#002B55',
-                display: 'inline-block',
-                fontSize: 16,
-                fontWeight: 'bold',
-                margin: '16px auto',
-                padding: '12px 16px',
-              }}
-            >
-              {props.cta.value.text}
-            </div>
-          ) : null}
-        </div>
+        <NotEditable>
+            <TwitterTimelineEmbed sourceType="profile" noFooter noHeader noBorder autoHeight screenName={handle.value} options={{height: 400, tweetLimit: 1}} />
+        </NotEditable>
       );
     },
-    label: 'Hero',
+    label: 'Twitter Timeline',
     props: {
-      title: fields.child({ kind: 'inline', placeholder: 'Title...' }),
-      content: fields.child({ kind: 'block', placeholder: '...' }),
-      imageSrc: fields.text({
-        label: 'Image URL',
-        defaultValue: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809',
-      }),
-      cta: fields.conditional(fields.checkbox({ label: 'Show CTA' }), {
-        false: fields.empty(),
-        true: fields.object({
-          text: fields.child({ kind: 'inline', placeholder: 'CTA...' }),
-          href: fields.url({ label: 'Call to action link' }),
-        }),
+      handle: fields.text({
+        label: 'Twitter handle',
+        defaultValue: 'keystonejs',
       }),
     },
   }),
